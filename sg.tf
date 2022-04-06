@@ -38,7 +38,6 @@ resource "aws_security_group_rule" "egress" {
   to_port   = 0
   protocol  = "-1"
 
-  # Since this is generic EC2 instance we need open egress traffic
   cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:AWS007
   description = "terraform managed"
 }
@@ -51,14 +50,14 @@ resource "aws_security_group_rule" "ingress_cidr_rules" {
 
   type = "ingress"
   /*
-   *  below super ugly split thing, allow to specify single port
-   *  or port range in a form from-to, eg: 3200-3300
+   *  super ugly split thing, allows to specify single port
+   *  or port range in a form "from-to", eg: 3200-3300
    */
   from_port = split("-", var.ingress_cidr_rules[count.index][0])[0]
   to_port   = length(split("-", var.ingress_cidr_rules[count.index][0])) > 1 ? split("-", var.ingress_cidr_rules[count.index][0])[1] : split("-", var.ingress_cidr_rules[count.index][0])[0]
-  protocol  = "tcp"
+  protocol  = var.ingress_cidr_rules[count.index][1]
 
-  cidr_blocks = [var.ingress_cidr_rules[count.index][1]]
+  cidr_blocks = [var.ingress_cidr_rules[count.index][2]]
   description = "terraform managed"
 }
 
@@ -69,13 +68,13 @@ resource "aws_security_group_rule" "ingress_sg_rules" {
 
   type = "ingress"
   /*
-   *  below super ugly split thing, allow to specify single port
-   *  or port range in a form from-to, eg: 3200-3300
+   *  super ugly split thing, allows to specify single port
+   *  or port range in a form "from-to", eg: 3200-3300
    */
   from_port = split("-", var.ingress_sg_rules[count.index][0])[0]
   to_port   = length(split("-", var.ingress_sg_rules[count.index][0])) > 1 ? split("-", var.ingress_sg_rules[count.index][0])[1] : split("-", var.ingress_sg_rules[count.index][0])[0]
-  protocol  = "tcp"
+  protocol  = var.ingress_cidr_rules[count.index][1]
 
-  source_security_group_id = var.ingress_sg_rules[count.index][1]
+  source_security_group_id = var.ingress_sg_rules[count.index][2]
   description              = "terraform managed"
 }

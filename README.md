@@ -1,10 +1,10 @@
 # version 
-0.2.0  ([changelog](./CHANGELOG.md))
+0.3.0  ([changelog](./CHANGELOG.md)) (please note module has not reached stable (1.0.0) version and minor updates may introduce breaking changes)
 
 # usage
 ```
 module "ec2" {
-  source = "git@github.com:devopsninja-info/terraform-aws-ec2-instance.git?ref=0.2.0"
+  source = "git@github.com:devopsninja-info/terraform-aws-ec2-instance.git?ref=0.3.0"
 
   account_id   = "..." // required,
   account_name = "..." // required,

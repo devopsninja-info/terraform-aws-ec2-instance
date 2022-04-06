@@ -1,3 +1,15 @@
+## 0.3.0 (April 06, 2022)
+
+NOTES:
+* tested against: terraform 1.1.7, aws provider 4.8.0
+
+BREAKING CHANGES:
+* individual items in `ingress_cidr_rules` and `ingress_sg_rules` variables have 3 elements now (instead of 2), protocol has been added, please refer to example in variables.tf file
+
+ENHANCEMENTS:
+* it is possible to specify protocol for `ingress_cidr_rules` and `ingress_sg_rules`
+
+
 ## 0.2.0 (April 06, 2022)
 
 NOTES:

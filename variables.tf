@@ -37,11 +37,13 @@ variable "allow_ssh_access_from" {
 }
 
 /*
+ * ingress_cidr_rules
+ *   
  * example:
  *   [
- *     ["80",   "0.0.0.0/0"],
- *     ["443",  "0.0.0.0/0"],
- *     ["8080", "87.239.222.103/32"],
+ *     ["80",        "tcp", "0.0.0.0/0"],
+ *     ["443",       "tcp", "0.0.0.0/0"],
+ *     ["8080-8081", "udp", "87.239.222.103/32"],
  *   ]
  *
  */
@@ -51,9 +53,12 @@ variable "ingress_cidr_rules" {
 }
 
 /*
+ * ingress_sg_rules
+ *
  * example:
  *   [
- *     ["80", "sg-abc012"],
+ *     ["80",    "tcp", "sg-abc012"],
+ *     ["80-81", "udp", "sg-abc012"],
  *   ]
  *
  */
@@ -171,8 +176,8 @@ variable "metadata_tags_enabled" {
 }
 /// }}}
 
-variable extra_tags {
-  type    = map
+variable "extra_tags" {
+  type    = map(any)
   default = {}
 }
 // }}}
@@ -186,8 +191,8 @@ locals {
 
   tags = merge(
     {
-    "Name"            = var.name
-    "user:managed_by" = "terraform"
+      "Name"            = var.name
+      "user:managed_by" = "terraform"
     },
     var.extra_tags,
   )
