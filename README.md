@@ -1,10 +1,10 @@
 # version 
-0.1.0  ([changelog](./CHANGELOG.md))
+0.2.0  ([changelog](./CHANGELOG.md))
 
 # usage
 ```
 module "ec2" {
-  source = "git@github.com:devopsninja-info/terraform-aws-ec2-instance.git?ref=0.1.0"
+  source = "git@github.com:devopsninja-info/terraform-aws-ec2-instance.git?ref=0.2.0"
 
   account_id   = "..." // required,
   account_name = "..." // required,
@@ -33,10 +33,14 @@ module "ec2" {
   attach_extra_policies    = []                // default,
 
   bootstrap            = false                 // default,
+  bootstrap_s3_bucket  = ""                    // default, empty string means, ${var.account_name}-ec2-bootstrap
   bootstrap_entrypoint = "main.sh"             // default,
 
   metadata_endpoint_enabled = true             // default,
   metadata_hop_limit        = 1                // default,
   metadata_tokens_required  = true             // default,
+  metadata_tags_enabled     = false            // default,
+
+  extra_tags = {}                              // default,
 }
 ```

@@ -128,6 +128,11 @@ variable "bootstrap" {
   default = false
 }
 
+variable "bootstrap_s3_bucket" {
+  type    = string
+  default = ""
+}
+
 variable "bootstrap_entrypoint" {
   type    = string
   default = "main.sh"
@@ -159,8 +164,17 @@ variable "metadata_tokens_required" {
   type    = bool
   default = true
 }
+
+variable "metadata_tags_enabled" {
+  type    = bool
+  default = false
+}
 /// }}}
 
+variable extra_tags {
+  type    = map
+  default = {}
+}
 // }}}
 
 // {{{ locals
@@ -170,10 +184,15 @@ locals {
   name_titled         = replace(title(var.name), "-", "")
   account_name_titled = replace(title(var.account_name), "-", "")
 
-  tags = {
+  tags = merge(
+    {
     "Name"            = var.name
     "user:managed_by" = "terraform"
-  }
+    },
+    var.extra_tags,
+  )
+
+  bootstrap_s3_bucket = length(var.bootstrap_s3_bucket) > 0 ? var.bootstrap_s3_bucket : "${var.account_name}-ec2-bootstrap"
 
   user_data = <<-EOF
 #!/bin/bash -
@@ -195,7 +214,7 @@ ${var.instance_extra_user_data}
 
 %{endif~}
 %{if var.bootstrap~}
-aws s3 cp s3://${var.account_name}-ec2-bootstrap/${var.bootstrap_entrypoint} - | bash -s -- ${var.account_name}
+aws s3 cp s3://${local.bootstrap_s3_bucket}/${var.bootstrap_entrypoint} - | bash -s -- ${var.account_name}
 %{endif~}
 echo "[END] $(date -u)"
   EOF

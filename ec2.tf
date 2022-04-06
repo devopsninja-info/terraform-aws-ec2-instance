@@ -28,6 +28,7 @@ resource "aws_instance" "ec2" {
     http_endpoint               = var.metadata_endpoint_enabled ? "enabled" : "disabled"
     http_put_response_hop_limit = var.metadata_hop_limit
     http_tokens                 = var.metadata_tokens_required ? "required" : "optional"
+    instance_metadata_tags      = var.metadata_tags_enabled ? "enabled" : "disabled"
   }
 
   depends_on = [
